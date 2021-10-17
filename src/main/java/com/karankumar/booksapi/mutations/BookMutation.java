@@ -24,6 +24,7 @@ import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class BookMutation {
     }
 
     // TODO: change this to update a book rather than updating a specific field
+    @Secured("admin")
     @DgsData(parentType = DgsConstants.MUTATION.TYPE_NAME, field = DgsConstants.MUTATION.AddIsbn13)
     public Book addIsbn13(DataFetchingEnvironment dataFetchingEnvironment)
             throws InvalidISBN10Exception, InvalidISBN13Exception {
@@ -55,6 +57,7 @@ public class BookMutation {
         return bookService.save(optionalBook.get());
     }
 
+    @Secured("admin")
     @DgsData(parentType = DgsConstants.MUTATION.TYPE_NAME, field = DgsConstants.MUTATION.DeleteBook)
     public Book deleteBook(DataFetchingEnvironment dataFetchingEnvironment) {
         String stringId = dataFetchingEnvironment.getArgument(DgsConstants.BOOK.Id);

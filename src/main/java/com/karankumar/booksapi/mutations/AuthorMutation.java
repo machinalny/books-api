@@ -22,6 +22,8 @@ import com.netflix.graphql.dgs.DgsComponent;
 import com.netflix.graphql.dgs.DgsData;
 import graphql.schema.DataFetchingEnvironment;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -37,12 +39,14 @@ public class AuthorMutation {
         this.authorService = authorService;
     }
 
+    @Secured("admin")
     @DgsData(parentType = DgsConstants.MUTATION.TYPE_NAME, field = DgsConstants.MUTATION.AddAuthor)
     public Author addAuthor(DataFetchingEnvironment dataFetchingEnvironment) {
         String fullName = dataFetchingEnvironment.getArgument(DgsConstants.AUTHOR.FullName);
         return authorService.save(new Author(fullName, new HashSet<>()));
     }
 
+    @Secured("admin")
     @DgsData(parentType = DgsConstants.MUTATION.TYPE_NAME, field = DgsConstants.MUTATION.DeleteAuthor)
     @Transactional
     public Author deleteAuthor(DataFetchingEnvironment dataFetchingEnvironment) {
